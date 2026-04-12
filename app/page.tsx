@@ -86,7 +86,7 @@ export default function Home() {
                 quality={80}
               />
             </div>
-            <span className="pc-label">TAHA NAGEEB</span>
+            <span className="pc-label">ADVACC</span>
           </div>
         </div>
       </div>
