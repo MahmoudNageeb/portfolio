@@ -32,10 +32,8 @@ function Navbar() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => { setOpen(false); }, [path]);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -56,14 +54,13 @@ function Navbar() {
 
   return (
     <>
-      {/* Bismillah top bar */}
       <div className="topbar">
         <span>بسم الله الرحمن الرحيم</span>
       </div>
 
       <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
         <Link href="/" className="nav-brand" onClick={closeMenu}>
-          <span className="nav-logo">T</span>
+          <span className="nav-logo">TN</span>
           <span>TAHA NAGEEB</span>
         </Link>
 
@@ -85,7 +82,6 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu - FIXED: using visibility+opacity instead of display:none */}
       <div className={`mob-menu${open ? " open" : ""}`}>
         {NAV.map((n) => (
           <Link key={n.href} href={n.href} className={path === n.href ? "active" : ""} onClick={closeMenu}>
@@ -94,7 +90,6 @@ function Navbar() {
         ))}
       </div>
 
-      {/* Overlay to close menu */}
       {open && (
         <div
           style={{
@@ -161,90 +156,156 @@ function ScrollAnim() {
   return null;
 }
 
-/* ===== Professional Page Loader - Home Page Only ===== */
+/* ===== Ultra Professional Page Loader - Home Page Only ===== */
 function PageLoader() {
   const path = usePathname();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [statusIndex, setStatusIndex] = useState(0);
+  const [dotIndex, setDotIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const statusIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const statusTexts = ["LOADING", "INITIALIZING", "PREPARING", "WELCOMING"];
+  const dotIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  
+  const statusTexts = ["ESTABLISHING CONNECTION", "LOADING MODULES", "SYNCHRONIZING DATA", "CALIBRATING SYSTEM", "ALMOST READY", "WELCOME BACK"];
+  const dots = ["", ".", "..", "..."];
 
-  // Only show loader on home page
   const isHomePage = path === "/";
 
-  // Initial load for home page
   useEffect(() => {
     if (!isHomePage) {
       setLoading(false);
       return;
     }
 
-    // Progress counter
+    let currentProgress = 0;
+    
+    // Smooth progress counter - fixed to never exceed 100
     intervalRef.current = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          if (intervalRef.current) clearInterval(intervalRef.current);
-          return 100;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 150);
+      currentProgress += Math.random() * 8 + 2;
+      if (currentProgress >= 100) {
+        currentProgress = 100;
+        setProgress(100);
+        if (intervalRef.current) clearInterval(intervalRef.current);
+      } else {
+        setProgress(Math.floor(currentProgress));
+      }
+    }, 120);
 
     // Status text changer
+    let statusIdx = 0;
     statusIntervalRef.current = setInterval(() => {
-      setStatusIndex(prev => (prev + 1) % statusTexts.length);
+      statusIdx = (statusIdx + 1) % statusTexts.length;
+      setStatusIndex(statusIdx);
     }, 800);
 
-    // Timer to hide loader
+    // Dot animation
+    let dotIdx = 0;
+    dotIntervalRef.current = setInterval(() => {
+      dotIdx = (dotIdx + 1) % dots.length;
+      setDotIndex(dotIdx);
+    }, 300);
+
+    // Timer to hide loader after progress reaches 100
+    const checkComplete = setInterval(() => {
+      if (currentProgress >= 100) {
+        setTimeout(() => {
+          setLoading(false);
+          clearInterval(checkComplete);
+        }, 500);
+      }
+    }, 50);
+
     timerRef.current = setTimeout(() => {
-      setLoading(false);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (statusIntervalRef.current) clearInterval(statusIntervalRef.current);
-    }, 2000);
+      if (currentProgress < 100) {
+        setProgress(100);
+        setTimeout(() => setLoading(false), 500);
+      }
+    }, 4000);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (statusIntervalRef.current) clearInterval(statusIntervalRef.current);
+      if (dotIntervalRef.current) clearInterval(dotIntervalRef.current);
+      clearInterval(checkComplete);
     };
   }, [isHomePage]);
 
-  // Don't render loader if not home page
   if (!isHomePage) return null;
 
   return (
     <div className={`page-loader${loading ? "" : " hide"}`}>
+      {/* Animated Background Particles */}
+      <div className="loader-bg-particles">
+        <div className="particle" /><div className="particle" /><div className="particle" />
+        <div className="particle" /><div className="particle" /><div className="particle" />
+        <div className="particle" /><div className="particle" /><div className="particle" />
+        <div className="particle" /><div className="particle" /><div className="particle" />
+      </div>
+
+      {/* Main Circle Container */}
       <div className="loader-circle-container">
         <div className="loader-outer-ring" />
         <div className="loader-middle-ring" />
         <div className="loader-inner-ring" />
+        <div className="loader-core-ring" />
         <div className="loader-logo">TN</div>
         <div className="loader-particle" />
         <div className="loader-particle" />
         <div className="loader-particle" />
         <div className="loader-particle" />
+        <div className="loader-particle" />
+        <div className="loader-particle" />
       </div>
       
+      {/* Progress Number */}
       <div className="loader-progress">
-        {Math.min(Math.floor(progress), 100)}<span>%</span>
+        <span className="progress-number">{Math.min(progress, 100)}</span>
+        <span className="progress-percent">%</span>
       </div>
       
-      <div className="loader-status">
-        {statusTexts[statusIndex]}
+      {/* Progress Bar with Glow */}
+      <div className="loader-bar-container">
+        <div className="loader-bar-wrapper">
+          <div className="loader-bar-bg" />
+          <div className="loader-bar-fill" style={{ width: `${Math.min(progress, 100)}%` }} />
+          <div className="loader-bar-glow" style={{ left: `${Math.min(progress, 100)}%` }} />
+        </div>
+        <div className="loader-bar-stats">
+          <span>INITIALIZING</span>
+          <span>{Math.min(progress, 100)}% COMPLETE</span>
+        </div>
       </div>
       
-      <div className="loader-bar-wrapper">
-        <div className="loader-bar" style={{ transform: `scaleX(${Math.min(progress, 100) / 100})` }} />
+      {/* Status Text with Typing Effect */}
+      <div className="loader-status-container">
+        <div className="loader-status-icon">
+          <i className="fas fa-terminal" />
+        </div>
+        <div className="loader-status-text">
+          <span className="status-prefix">$></span>
+          <span className="status-message">{statusTexts[statusIndex]}</span>
+          <span className="status-cursor">{dots[dotIndex]}</span>
+        </div>
       </div>
       
-      <div className="loader-glow" />
-      
-      <div className="loader-shimmer-text">
-        TAHA NAGEEB • ADVANCED ACCOUNTING
+      {/* Floating Elements */}
+      <div className="loader-floating-elements">
+        <div className="float-element"><i className="fas fa-chart-line" /></div>
+        <div className="float-element"><i className="fas fa-database" /></div>
+        <div className="float-element"><i className="fas fa-code" /></div>
+        <div className="float-element"><i className="fas fa-cloud-upload-alt" /></div>
       </div>
+      
+      {/* Brand Signature */}
+      <div className="loader-signature">
+        <div className="signature-line" />
+        <span>TAHA NAGEEB</span>
+        <div className="signature-line" />
+      </div>
+      <div className="loader-subtitle">Advanced Accounting & Systems Development</div>
     </div>
   );
 }
