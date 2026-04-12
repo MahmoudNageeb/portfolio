@@ -37,6 +37,15 @@ const projects: Proj[] = [
   { year: "—", company: "شركة المنذر العقارية", area: "المستشفيات (تجديد)", ministry: "وزارة الصحة", system: "أعمال الصيانة", cat: "صحة" },
 ];
 
+// حساب العدد الفعلي للمشاريع
+const totalProjects = projects.length;
+
+// حساب عدد الوزارات/الجهات الفريدة
+const uniqueMinistries = new Set(projects.map(p => p.ministry)).size;
+
+// حساب عدد المناطق الفريدة
+const uniqueAreas = new Set(projects.map(p => p.area)).size;
+
 const CATS = ["الكل", "تربية", "أوقاف", "ثقافة", "صحة"];
 
 const iconMap: Record<string, string> = {
@@ -73,14 +82,14 @@ export default function ProjectsPage() {
         <div className="sec-hdr">
           <div className="sec-badge"><i className="fas fa-lock" /> المشاريع المحمية</div>
           <h2 className="sec-title">المشاريع المنجزة</h2>
-          <p className="sec-desc">+35 مشروع تم تنفيذه لوزارات وجهات رسمية وشركات خاصة — جميعها محمية بسرية تامة</p>
+          <p className="sec-desc">+{totalProjects} مشروع تم تنفيذه لوزارات وجهات رسمية وشركات خاصة — جميعها محمية بسرية تامة</p>
         </div>
 
         {/* Filter */}
         <div className="proj-filter">
           {CATS.map((c) => (
             <button key={c} className={`proj-fbtn${filter === c ? " active" : ""}`} onClick={() => setFilter(c)}>
-              {c === "الكل" ? `الكل (35)` : `${c} (${projects.filter((p) => p.cat === c).length})`}
+              {c === "الكل" ? `الكل (${totalProjects})` : `${c} (${projects.filter((p) => p.cat === c).length})`}
             </button>
           ))}
         </div>
@@ -130,9 +139,9 @@ export default function ProjectsPage() {
         </div>
 
         <div className="sbar">
-          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+35</span><span className="sbar-l">مشروع منجز</span></div>
-          <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">4</span><span className="sbar-l">وزارات وجهات</span></div>
-          <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">6</span><span className="sbar-l">مناطق</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+{totalProjects}</span><span className="sbar-l">مشروع منجز</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">{uniqueMinistries}</span><span className="sbar-l">وزارات وجهات</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">{uniqueAreas}</span><span className="sbar-l">مناطق</span></div>
         </div>
       </div>
     </div>
