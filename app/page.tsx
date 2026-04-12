@@ -80,8 +80,8 @@ export default function Home() {
               <Image 
                 src="/profile.jpg" 
                 alt="Taha Nageeb"
-                width={220}
-                height={300}
+                width={300}
+                height={500}
                 className="profile-image"
                 priority
                 quality={80}
