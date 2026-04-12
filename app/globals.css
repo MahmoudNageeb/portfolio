@@ -607,3 +607,18 @@ img{max-width:100%;display:block}
   .pc-wrap{width:130px;height:130px}
 }
 @media print{.navbar,.topbar,.btt,.s-prog,.mob-menu{display:none!important}body{background:#fff;color:#000}}
+
+/* أضف هذا الكود في آخر ملف الـ CSS الخاص بك */
+.hero-name .name-accent {
+  background: linear-gradient(135deg, #a855f7, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pc-img .profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
