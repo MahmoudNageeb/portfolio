@@ -80,14 +80,14 @@ export default function Home() {
               <Image 
                 src="/profile.jpg" 
                 alt="Taha Nageeb"
-                width={300}
-                height={150}
+                width={250}
+                height={250}
                 className="profile-image"
                 priority
                 quality={80}
               />
             </div>
-            <span className="pc-label">ADVACC</span>
+            <span className="pc-label">TAHA NAGEEB</span>
           </div>
         </div>
       </div>
