@@ -111,12 +111,6 @@ export default function ExperiencePage() {
             </div>
           ))}
         </div>
-
-        <div className="sbar" style={{ marginTop: "2.5rem" }}>
-          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+14</span><span className="sbar-l">سنوات خبرة</span></div>
-          <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">5</span><span className="sbar-l">شركات</span></div>
-          <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">+15</span><span className="sbar-l">موظف تحت الإدارة</span></div>
-        </div>
       </div>
     </div>
   );
