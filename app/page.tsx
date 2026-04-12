@@ -81,7 +81,7 @@ export default function Home() {
                 src="/profile.jpg" 
                 alt="Taha Nageeb"
                 width={300}
-                height={500}
+                height={150}
                 className="profile-image"
                 priority
                 quality={80}
