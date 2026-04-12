@@ -59,7 +59,7 @@ export default function Home() {
             <div className="loader-outer-ring" />
             <div className="loader-middle-ring" />
             <div className="loader-inner-ring" />
-            <div className="loader-logo">TN</div>
+            <div className="loader-logo">ADVACC</div>
             <div className="loader-particle" />
             <div className="loader-particle" />
             <div className="loader-particle" />
