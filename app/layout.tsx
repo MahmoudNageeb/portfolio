@@ -1,6 +1,6 @@
 "use client";
 import "./globals.css";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -161,6 +161,39 @@ function ScrollAnim() {
   return null;
 }
 
+/* ===== Professional Page Loader ===== */
+function PageLoader() {
+  const path = usePathname();
+  const [loading, setLoading] = useState(true);
+  const prevPath = useRef(path);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Initial load
+  useEffect(() => {
+    timerRef.current = setTimeout(() => setLoading(false), 800);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, []);
+
+  // Route change
+  useEffect(() => {
+    if (prevPath.current !== path) {
+      prevPath.current = path;
+      setLoading(true);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setLoading(false), 600);
+    }
+  }, [path]);
+
+  return (
+    <div className={`page-loader${loading ? "" : " hide"}`}>
+      <div className="loader-logo">A</div>
+      <div className="loader-dots"><span /><span /><span /></div>
+      <div className="loader-bar"><div className="loader-bar-inner" /></div>
+      <p className="loader-text">ADVACC</p>
+    </div>
+  );
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl" data-theme="dark" suppressHydrationWarning>
@@ -174,6 +207,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <title>ADVACC — الموقع الرسمي</title>
       </head>
       <body>
+        <PageLoader />
         <ScrollProgress />
         <Navbar />
         <main>{children}</main>
