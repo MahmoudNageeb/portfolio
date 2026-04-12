@@ -86,7 +86,7 @@ export default function SkillsPage() {
 
         <div className="sbar">
           <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+14</span><span className="sbar-l">سنوات خبرة</span></div>
-          <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">+35</span><span className="sbar-l">مشروع منجز</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">+25</span><span className="sbar-l">مشروع منجز</span></div>
           <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">5</span><span className="sbar-l">فئات مهارات</span></div>
         </div>
       </div>
