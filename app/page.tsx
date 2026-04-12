@@ -59,7 +59,7 @@ export default function Home() {
             <div className="loader-outer-ring" />
             <div className="loader-middle-ring" />
             <div className="loader-inner-ring" />
-            <div className="loader-logo">ADVACC</div>
+            <div className="loader-logo">TN</div>
             <div className="loader-particle" />
             <div className="loader-particle" />
             <div className="loader-particle" />
@@ -149,7 +149,7 @@ export default function Home() {
                   quality={80}
                 />
               </div>
-              <span className="pc-label">ADVACC</span>
+              <span className="pc-label">TAHA NAGEEB</span>
             </div>
           </div>
         </div>
