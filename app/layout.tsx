@@ -63,8 +63,8 @@ function Navbar() {
 
       <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
         <Link href="/" className="nav-brand" onClick={closeMenu}>
-          <span className="nav-logo">A</span>
-          <span>ADVACC</span>
+          <span className="nav-logo">T</span>
+          <span>TAHA NAGEEB</span>
         </Link>
 
         <ul className="nav-links">
@@ -144,7 +144,7 @@ function Footer() {
       <div className="footer-links">
         {NAV.map((n) => <Link key={n.href} href={n.href}>{n.label}</Link>)}
       </div>
-      <p className="footer-copy">&copy; {new Date().getFullYear()} advacc — جميع الحقوق محفوظة.</p>
+      <p className="footer-copy">&copy; {new Date().getFullYear()} Taha Nageeb — جميع الحقوق محفوظة.</p>
     </footer>
   );
 }
@@ -161,35 +161,90 @@ function ScrollAnim() {
   return null;
 }
 
-/* ===== Professional Page Loader ===== */
+/* ===== Professional Page Loader - Home Page Only ===== */
 function PageLoader() {
   const path = usePathname();
   const [loading, setLoading] = useState(true);
-  const prevPath = useRef(path);
+  const [progress, setProgress] = useState(0);
+  const [statusIndex, setStatusIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const statusIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const statusTexts = ["LOADING", "INITIALIZING", "PREPARING", "WELCOMING"];
 
-  // Initial load
-  useEffect(() => {
-    timerRef.current = setTimeout(() => setLoading(false), 800);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, []);
+  // Only show loader on home page
+  const isHomePage = path === "/";
 
-  // Route change
+  // Initial load for home page
   useEffect(() => {
-    if (prevPath.current !== path) {
-      prevPath.current = path;
-      setLoading(true);
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setLoading(false), 600);
+    if (!isHomePage) {
+      setLoading(false);
+      return;
     }
-  }, [path]);
+
+    // Progress counter
+    intervalRef.current = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          return 100;
+        }
+        return prev + Math.random() * 15;
+      });
+    }, 150);
+
+    // Status text changer
+    statusIntervalRef.current = setInterval(() => {
+      setStatusIndex(prev => (prev + 1) % statusTexts.length);
+    }, 800);
+
+    // Timer to hide loader
+    timerRef.current = setTimeout(() => {
+      setLoading(false);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (statusIntervalRef.current) clearInterval(statusIntervalRef.current);
+    }, 2000);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (statusIntervalRef.current) clearInterval(statusIntervalRef.current);
+    };
+  }, [isHomePage]);
+
+  // Don't render loader if not home page
+  if (!isHomePage) return null;
 
   return (
     <div className={`page-loader${loading ? "" : " hide"}`}>
-      <div className="loader-logo">A</div>
-      <div className="loader-dots"><span /><span /><span /></div>
-      <div className="loader-bar"><div className="loader-bar-inner" /></div>
-      <p className="loader-text">ADVACC</p>
+      <div className="loader-circle-container">
+        <div className="loader-outer-ring" />
+        <div className="loader-middle-ring" />
+        <div className="loader-inner-ring" />
+        <div className="loader-logo">TN</div>
+        <div className="loader-particle" />
+        <div className="loader-particle" />
+        <div className="loader-particle" />
+        <div className="loader-particle" />
+      </div>
+      
+      <div className="loader-progress">
+        {Math.min(Math.floor(progress), 100)}<span>%</span>
+      </div>
+      
+      <div className="loader-status">
+        {statusTexts[statusIndex]}
+      </div>
+      
+      <div className="loader-bar-wrapper">
+        <div className="loader-bar" style={{ transform: `scaleX(${Math.min(progress, 100) / 100})` }} />
+      </div>
+      
+      <div className="loader-glow" />
+      
+      <div className="loader-shimmer-text">
+        TAHA NAGEEB • ADVANCED ACCOUNTING
+      </div>
     </div>
   );
 }
@@ -200,11 +255,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#06091a" />
-        <meta name="description" content="ADVACC — الموقع الرسمي. رئيس حسابات | مدير موارد بشرية | مطوّر أنظمة وقواعد بيانات. خبرة +14 سنة في الكويت." />
+        <meta name="description" content="Taha Nageeb — الموقع الرسمي. رئيس حسابات | مدير موارد بشرية | مطوّر أنظمة وقواعد بيانات. خبرة +14 سنة في الكويت." />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" />
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
-        <title>ADVACC — الموقع الرسمي</title>
+        <title>Taha Nageeb — الموقع الرسمي</title>
       </head>
       <body>
         <PageLoader />
