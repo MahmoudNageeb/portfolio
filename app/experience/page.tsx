@@ -1,0 +1,123 @@
+"use client";
+import { useEffect } from "react";
+
+const jobs = [
+  {
+    date: "06/11/2022 — 15/06/2025",
+    dc: "dot-c", dtc: "dt-c",
+    role: "رئيس الحسابات + مدير قسم الموارد البشرية",
+    company: "شركة ميترا المتحدة للتجارة العامة والمقاولات",
+    location: "الكويت",
+    desc: "إدارة شاملة لقسمي الحسابات والموارد البشرية، تصميم وتطوير أنظمة قواعد البيانات وبرامج إصدار أوامر العمل والفواتير لعدة وزارات وجهات رسمية وشركات خاصة.",
+    ach: [
+      "إدارة فريق من 15+ موظف في قسمي المحاسبة والموارد البشرية",
+      "تطوير نظام إدارة الموارد البشرية المتكامل",
+      "تصميم برامج قواعد بيانات لأكثر من 50 شركة متعاقدة",
+      "إعداد الميزانيات العمومية والقوائم المالية الشاملة",
+      "تصميم برامج إصدار أوامر العمل والفواتير لوزارة التربية والأوقاف والمجلس الوطني للثقافة",
+      "متابعة وتنسيق المعاملات مع الجهاز المركزي للمناقصات العامة",
+      "إدارة شؤون العمالة والإقامات والتأشيرات",
+    ],
+  },
+  {
+    date: "01/08/2020 — 05/11/2022",
+    dc: "dot-p", dtc: "dt-p",
+    role: "محاسب أول + مندوب شئون وجوازات",
+    company: "شركة ميترا المتحدة للتجارة العامة والمقاولات",
+    location: "الكويت",
+    desc: "إدارة العمليات المحاسبية اليومية والتقارير المالية الدورية، متابعة شؤون العمالة والإقامات والتأشيرات.",
+    ach: [
+      "إعداد التقارير المالية الشهرية والسنوية",
+      "التنسيق مع البنوك والجهات الرسمية",
+      "إنجاز معاملات الإقامات والتأشيرات",
+      "متابعة التعاملات مع الجهاز المركزي للمناقصات العامة",
+      "التعامل مع وزارة التجارة والصناعة",
+    ],
+  },
+  {
+    date: "10/11/2018 — 31/07/2020",
+    dc: "dot-g", dtc: "dt-g",
+    role: "محاسب + مندوب شئون وجوازات",
+    company: "شركة ميترا المتحدة للتجارة العامة والمقاولات",
+    location: "الكويت",
+    desc: "المهام المحاسبية والتعامل مع البنوك والجهات الرسمية، وإنجاز المعاملات الرسمية والتجارية.",
+    ach: [
+      "إدارة حسابات الشركة والتعاملات البنكية",
+      "التعامل مع الجهاز المركزي للمناقصات العامة",
+      "إنجاز معاملات وزارة التجارة والصناعة",
+      "متابعة شؤون العمالة والإقامات",
+    ],
+  },
+  {
+    date: "01/07/2018 — 08/11/2018",
+    dc: "dot-y", dtc: "dt-y",
+    role: "سكرتير تنفيذي",
+    company: "شركة العدواني للتجارة العامة والمقاولات",
+    location: "الكويت",
+    desc: "تنظيم وإدارة الأعمال المكتبية والسكرتارية التنفيذية وإعداد المراسلات والتقارير الرسمية.",
+    ach: [
+      "تنسيق الاجتماعات والمواعيد",
+      "إعداد المراسلات الرسمية والتقارير",
+      "التنسيق مع الجهات الخارجية والعملاء",
+      "تنظيم الأرشيف والملفات",
+    ],
+  },
+  {
+    date: "04/08/2014 — 01/03/2017",
+    dc: "dot-r", dtc: "dt-r",
+    role: "سكرتير تنفيذي",
+    company: "شركة ساسكو الخليج للتجارة العامة والمقاولات",
+    location: "الكويت",
+    desc: "بداية المسيرة المهنية في الكويت. إدارة الأعمال المكتبية والتعامل مع المراسلات والمستندات الرسمية.",
+    ach: [
+      "إدارة المراسلات والمستندات الرسمية",
+      "التعامل مع الجهات الرسمية والعملاء",
+      "تنظيم الأرشيف والملفات والوثائق",
+      "إدارة الأعمال المكتبية اليومية",
+    ],
+  },
+];
+
+export default function ExperiencePage() {
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => { if (e.isIntersecting) e.target.classList.add("vis"); }),
+      { threshold: 0.06 }
+    );
+    document.querySelectorAll(".anim").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div style={{ paddingTop: "calc(var(--top-h) + var(--nav-h))" }}>
+      <div className="sec">
+        <div className="sec-hdr">
+          <div className="sec-badge"><i className="fas fa-briefcase" /> المسيرة المهنية</div>
+          <h2 className="sec-title">الخبرات العملية</h2>
+          <p className="sec-desc">مسيرة مهنية حافلة بالإنجازات تمتد لأكثر من ١٤ سنة في قطاع المحاسبة والإدارة وتطوير الأنظمة</p>
+        </div>
+        <div className="timeline">
+          {jobs.map((j, i) => (
+            <div key={i} className="tl-item anim" style={{ transitionDelay: `${i * 0.08}s` }}>
+              <div className={`tl-dot ${j.dc}`} />
+              <div className="tl-card">
+                <div className={`tl-date ${j.dtc}`}><i className="fas fa-calendar-alt" /> {j.date}</div>
+                <h3 className="tl-role">{j.role}</h3>
+                <p className="tl-co"><i className="fas fa-building" /> {j.company}</p>
+                <p className="tl-loc"><i className="fas fa-map-marker-alt" /> {j.location}</p>
+                <p className="tl-desc">{j.desc}</p>
+                <ul className="tl-ach">{j.ach.map((a, k) => <li key={k}>{a}</li>)}</ul>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="sbar" style={{ marginTop: "2.5rem" }}>
+          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+14</span><span className="sbar-l">سنوات خبرة</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">5</span><span className="sbar-l">شركات</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">+15</span><span className="sbar-l">موظف تحت الإدارة</span></div>
+        </div>
+      </div>
+    </div>
+  );
+}
