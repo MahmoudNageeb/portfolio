@@ -285,7 +285,7 @@ function PageLoader() {
           <i className="fas fa-terminal" />
         </div>
         <div className="loader-status-text">
-<span className="status-prefix">{`$>`}</span>          <span className="status-message">{statusTexts[statusIndex]}</span>
+          <span className="status-message">{statusTexts[statusIndex]}</span>
           <span className="status-cursor">{dots[dotIndex]}</span>
         </div>
       </div>
