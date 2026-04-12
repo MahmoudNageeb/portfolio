@@ -73,14 +73,14 @@ export default function ProjectsPage() {
         <div className="sec-hdr">
           <div className="sec-badge"><i className="fas fa-lock" /> المشاريع المحمية</div>
           <h2 className="sec-title">المشاريع المنجزة</h2>
-          <p className="sec-desc">+{projects.length} مشروع تم تنفيذه لوزارات وجهات رسمية وشركات خاصة — جميعها محمية بسرية تامة</p>
+          <p className="sec-desc">+35 مشروع تم تنفيذه لوزارات وجهات رسمية وشركات خاصة — جميعها محمية بسرية تامة</p>
         </div>
 
         {/* Filter */}
         <div className="proj-filter">
           {CATS.map((c) => (
             <button key={c} className={`proj-fbtn${filter === c ? " active" : ""}`} onClick={() => setFilter(c)}>
-              {c === "الكل" ? `الكل (${projects.length})` : `${c} (${projects.filter((p) => p.cat === c).length})`}
+              {c === "الكل" ? `الكل (35)` : `${c} (${projects.filter((p) => p.cat === c).length})`}
             </button>
           ))}
         </div>
