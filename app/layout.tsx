@@ -60,7 +60,7 @@ function Navbar() {
 
       <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
         <Link href="/" className="nav-brand" onClick={closeMenu}>
-          <span className="nav-logo">ADVACC</span>
+          <span className="nav-logo">TN</span>
           <span>ADVACC</span>
         </Link>
 
