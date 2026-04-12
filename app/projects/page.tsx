@@ -130,7 +130,7 @@ export default function ProjectsPage() {
         </div>
 
         <div className="sbar">
-          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+{projects.length}</span><span className="sbar-l">مشروع منجز</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+35</span><span className="sbar-l">مشروع منجز</span></div>
           <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">4</span><span className="sbar-l">وزارات وجهات</span></div>
           <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">6</span><span className="sbar-l">مناطق</span></div>
         </div>
