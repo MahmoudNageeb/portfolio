@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -34,11 +35,13 @@ export default function Home() {
             <i className="fas fa-star" /> محاسب محترف ومطوّر أنظمة
           </div>
 
-          {/* Professional animated name */}
+          {/* Professional name - Taha Nageeb */}
           <div className="hero-name-wrap">
-            <h1 className="hero-name">ADVACC</h1>
+            <h1 className="hero-name">
+              Taha <span className="name-accent">Nageeb</span>
+            </h1>
             <div className="hero-name-line" />
-            <p className="hero-name-sub">Advanced Accounting</p>
+            <p className="hero-name-sub">Professional Accountant & Systems Developer</p>
           </div>
 
           <p className="hero-role">
@@ -73,8 +76,18 @@ export default function Home() {
             <div className="pc-ring"><div className="pc-dot" /></div>
             <div className="pc-ring"><div className="pc-dot" /></div>
             <div className="pc-ring" />
-            <div className="pc-img"><img src="/profile.jpg" alt="ADVACC" /></div>
-            <span className="pc-label">ADVACC</span>
+            <div className="pc-img">
+              <Image 
+                src="/profile.jpg" 
+                alt="Taha Nageeb"
+                width={250}
+                height={250}
+                className="profile-image"
+                priority
+                quality={80}
+              />
+            </div>
+            <span className="pc-label">TAHA NAGEEB</span>
           </div>
         </div>
       </div>
