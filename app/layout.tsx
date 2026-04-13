@@ -13,11 +13,48 @@ const NAV = [
   { href: "/contact", label: "الدعم المباشر", icon: "fas fa-paper-plane" },
 ];
 
+// Function to convert Gregorian to Hijri date
+function getHijriDate() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  
+  // Simple Hijri calculation (approximate - for accuracy use a proper library)
+  // This is an approximation - for production, consider using a proper Hijri library
+  const hijriYear = Math.floor((year - 622) * 0.97);
+  const hijriMonths = ["محرم", "صفر", "ربيع الأول", "ربيع الثاني", "جمادى الأولى", "جمادى الثانية", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"];
+  
+  // More accurate calculation using known reference points
+  const knownHijriStart = new Date(622, 6, 16); // July 16, 622 CE
+  const daysSinceHijra = Math.floor((date.getTime() - knownHijriStart.getTime()) / (1000 * 60 * 60 * 24));
+  const hijriDay = (daysSinceHijra % 29.53) + 1;
+  const hijriMonthIndex = Math.floor((daysSinceHijra / 29.53) % 12);
+  const hijriYearCalculated = Math.floor(daysSinceHijra / 354.367);
+  
+  return {
+    day: Math.floor(hijriDay),
+    month: hijriMonths[hijriMonthIndex],
+    year: hijriYearCalculated + 1,
+  };
+}
+
+function formatGregorianDate() {
+  const date = new Date();
+  const gregorianMonths = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+  const day = date.getDate();
+  const month = gregorianMonths[date.getMonth()];
+  const year = date.getFullYear();
+  return `${day} ${month} ${year} م`;
+}
+
 function Navbar() {
   const path = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [gregorianDate, setGregorianDate] = useState("");
+  const [hijriDate, setHijriDate] = useState("");
 
   useEffect(() => {
     const s = localStorage.getItem("theme") as "dark" | "light" | null;
@@ -43,6 +80,28 @@ function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  // Update dates on component mount and every day
+  useEffect(() => {
+    const updateDates = () => {
+      setGregorianDate(formatGregorianDate());
+      const hijri = getHijriDate();
+      setHijriDate(`${hijri.day} ${hijri.month} ${hijri.year} هـ`);
+    };
+    
+    updateDates();
+    
+    // Update at midnight
+    const now = new Date();
+    const msUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+    const timeoutId = setTimeout(() => {
+      updateDates();
+      // Then update every 24 hours
+      setInterval(updateDates, 86400000);
+    }, msUntilMidnight);
+    
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   const toggle = useCallback(() => {
     const n = theme === "dark" ? "light" : "dark";
     setTheme(n);
@@ -56,6 +115,12 @@ function Navbar() {
     <>
       <div className="topbar">
         <span>بسم الله الرحمن الرحيم</span>
+        <span className="topbar-dates">
+          <i className="fas fa-calendar-alt" style={{ marginLeft: "8px" }} />
+          {gregorianDate && <span>{gregorianDate}</span>}
+          {gregorianDate && hijriDate && <span style={{ margin: "0 8px" }}>|</span>}
+          {hijriDate && <span>{hijriDate}</span>}
+        </span>
       </div>
 
       <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
