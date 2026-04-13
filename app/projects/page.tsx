@@ -173,7 +173,7 @@ export default function ProjectsPage() {
         </div>
 
         <div className="sbar">
-          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+25</span><span className="sbar-l">مشروع منجز</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+30</span><span className="sbar-l">مشروع منجز</span></div>
           <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">{uniqueMinistries}</span><span className="sbar-l">وزارات وجهات</span></div>
           <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">+20</span><span className="sbar-l">مناطق</span></div>
         </div>
