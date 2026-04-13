@@ -6,7 +6,7 @@ type Proj = { year: string; company: string; area: string; ministry: string; sys
 
 const projects: Proj[] = [
   // وزارة التربية
-  { year: "2020", company: "شركة العماري", area: "ديوان عام الوزارة — المنطقة الثانية", ministry: "وزارة التربية", system: "قاعدة بيانات إصدار أوامر العمل والفواتير", cat: "تربية" },
+  { year: "2020", company: "شركة العامري", area: "ديوان عام الوزارة — المنطقة الثانية", ministry: "وزارة التربية", system: "قاعدة بيانات إصدار أوامر العمل والفواتير", cat: "تربية" },
   { year: "2021", company: "شركة المزايا الإنشائية", area: "حولي — المنطقة الأولى", ministry: "وزارة الأوقاف", system: "قاعدة بيانات إصدار التكاليف", cat: "أوقاف" },
   { year: "2023", company: "شركة الأداء الأول", area: "مبارك الكبير — المنطقة الثانية", ministry: "وزارة التربية", system: "قاعدة بيانات إصدار أوامر العمل والفواتير", cat: "تربية" },
   { year: "2023", company: "شركة المنذر العقارية", area: "الفروانية — المنطقة الأولى", ministry: "وزارة التربية", system: "قاعدة بيانات إصدار أوامر العمل والفواتير", cat: "تربية" },
@@ -35,6 +35,10 @@ const projects: Proj[] = [
   { year: "2025", company: "—", area: "جميع المناطق", ministry: "المجلس الوطني للثقافة والفنون والآداب", system: "قاعدة بيانات شاملة لإصدار أوامر العمل", cat: "المجلس الوطني" },
   // وزارة الصحة
   { year: "—", company: "شركة المنذر العقارية", area: "المستشفيات (تمديد العقد)", ministry: "وزارة الصحة", system: "قاعدة بيانات أعمال الصيانة", cat: "الصحة" },
+  // الهيئة العامة لشئون الإعاقة
+  { year: "2025", company: "شركة دابوق", area: "جميع فروع الهيئة", ministry: "الهيئة العامة لشئون الإعاقة", system: "قاعدة بيانات إصدار أوامر العمل وحساب الكميات", cat: "الهيئة العامة لشئون الإعاقة" },
+  // خاص
+  { year: "2025", company: "شركة ADVACC", area: "قطاعات متعددة", ministry: "القطاع الخاص", system: "20 قاعدة بيانات مختلفة", cat: "خاص" },
 ];
 
 // حساب العدد الفعلي للمشاريع
@@ -46,13 +50,15 @@ const uniqueMinistries = new Set(projects.map(p => p.ministry)).size;
 // حساب عدد المناطق الفريدة
 const uniqueAreas = new Set(projects.map(p => p.area)).size;
 
-const CATS = ["الكل", "تربية", "أوقاف", "المجلس الوطني", "الصحة"];
+const CATS = ["الكل", "تربية", "أوقاف", "المجلس الوطني", "الصحة", "الهيئة العامة لشئون الإعاقة", "خاص"];
 
 const iconMap: Record<string, string> = {
   "تربية": "fas fa-graduation-cap",
   "أوقاف": "fas fa-mosque",
   "المجلس الوطني": "fas fa-theater-masks",
   "الصحة": "fas fa-hospital",
+  "الهيئة العامة لشئون الإعاقة": "fas fa-wheelchair",
+  "خاص": "fas fa-building",
 };
 
 const colorMap: Record<string, { bg: string; fg: string; badge: string }> = {
@@ -60,6 +66,8 @@ const colorMap: Record<string, { bg: string; fg: string; badge: string }> = {
   "أوقاف": { bg: "rgba(168,85,247,.1)", fg: "var(--c2)", badge: "rgba(168,85,247,.08)" },
   "المجلس الوطني": { bg: "rgba(245,158,11,.1)", fg: "var(--c4)", badge: "rgba(245,158,11,.08)" },
   "الصحة": { bg: "rgba(34,197,94,.1)", fg: "var(--c3)", badge: "rgba(34,197,94,.08)" },
+  "الهيئة العامة لشئون الإعاقة": { bg: "rgba(236,72,153,.1)", fg: "#ec4899", badge: "rgba(236,72,153,.08)" },
+  "خاص": { bg: "rgba(139,92,246,.1)", fg: "#8b5cf6", badge: "rgba(139,92,246,.08)" },
 };
 
 export default function ProjectsPage() {
@@ -79,9 +87,16 @@ export default function ProjectsPage() {
   // Helper function to get category for filtering
   const getCategoryCount = (cat: string) => {
     if (cat === "الكل") return totalProjects;
-    if (cat === "المجلس الوطني") return projects.filter((p) => p.cat === "المجلس الوطني").length;
-    if (cat === "الصحة") return projects.filter((p) => p.cat === "الصحة").length;
     return projects.filter((p) => p.cat === cat).length;
+  };
+
+  // Helper function to get display name for tech badge
+  const getDisplayCatName = (cat: string) => {
+    if (cat === "المجلس الوطني") return "ثقافة";
+    if (cat === "الصحة") return "صحة";
+    if (cat === "الهيئة العامة لشئون الإعاقة") return "إعاقة";
+    if (cat === "خاص") return "خاص";
+    return cat;
   };
 
   return (
@@ -97,7 +112,7 @@ export default function ProjectsPage() {
         <div className="proj-filter">
           {CATS.map((c) => (
             <button key={c} className={`proj-fbtn${filter === c ? " active" : ""}`} onClick={() => setFilter(c)}>
-              {c === "الكل" ? `الكل (${totalProjects})` : `${c} (${getCategoryCount(c)})`}
+              {c === "الكل" ? `الكل (${totalProjects})` : `${c === "الهيئة العامة لشئون الإعاقة" ? "الهيئة العامة للإعاقة" : c} (${getCategoryCount(c)})`}
             </button>
           ))}
         </div>
@@ -118,7 +133,7 @@ export default function ProjectsPage() {
                 <p>{p.company} — {p.area}</p>
                 <div className="proj-techs">
                   <span className="proj-tech">{p.year}</span>
-                  <span className="proj-tech">{p.cat === "المجلس الوطني" ? "ثقافة" : p.cat === "الصحة" ? "صحة" : p.cat}</span>
+                  <span className="proj-tech">{getDisplayCatName(p.cat)}</span>
                   <span className="proj-tech">محمي</span>
                 </div>
                 <div className="proj-prot">
@@ -147,7 +162,7 @@ export default function ProjectsPage() {
         </div>
 
         <div className="sbar">
-          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+25</span><span className="sbar-l">مشروع منجز</span></div>
+          <div className="sbar-item anim" style={{ transitionDelay: ".3s" }}><span className="sbar-n">+{totalProjects}</span><span className="sbar-l">مشروع منجز</span></div>
           <div className="sbar-item anim" style={{ transitionDelay: ".4s" }}><span className="sbar-n">{uniqueMinistries}</span><span className="sbar-l">وزارات وجهات</span></div>
           <div className="sbar-item anim" style={{ transitionDelay: ".5s" }}><span className="sbar-n">+20</span><span className="sbar-l">مناطق</span></div>
         </div>
