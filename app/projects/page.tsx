@@ -32,9 +32,9 @@ const projects: Proj[] = [
   { year: "2025", company: "شركة المدلول", area: "الفروانية (صيانة جذرية)", ministry: "وزارة الأوقاف", system: "قاعدة بيانات إصدار التكاليف", cat: "أوقاف" },
   { year: "2025", company: "شركة تطوير الشرق الأوسط", area: "صيانة المساكن الوقفية", ministry: "وزارة الأوقاف", system: "قاعدة بيانات إصدار التكاليف", cat: "أوقاف" },
   // المجلس الوطني
-  { year: "2025", company: "—", area: "جميع المناطق", ministry: "المجلس الوطني للثقافة والفنون والآداب", system: "قاعدة بيانات شاملة لإصدار أوامر العمل", cat: "ثقافة" },
+  { year: "2025", company: "—", area: "جميع المناطق", ministry: "المجلس الوطني للثقافة والفنون والآداب", system: "قاعدة بيانات شاملة لإصدار أوامر العمل", cat: "المجلس الوطني" },
   // وزارة الصحة
-  { year: "—", company: "شركة المنذر العقارية", area: "المستشفيات (تمديد العقد)", ministry: "وزارة الصحة", system: "قاعدة بيانات أعمال الصيانة", cat: "صحة" },
+  { year: "—", company: "شركة المنذر العقارية", area: "المستشفيات (تمديد العقد)", ministry: "وزارة الصحة", system: "قاعدة بيانات أعمال الصيانة", cat: "الصحة" },
 ];
 
 // حساب العدد الفعلي للمشاريع
@@ -46,21 +46,20 @@ const uniqueMinistries = new Set(projects.map(p => p.ministry)).size;
 // حساب عدد المناطق الفريدة
 const uniqueAreas = new Set(projects.map(p => p.area)).size;
 
-// Fix: Match the categories with what's in the data
-const CATS = ["الكل", "تربية", "أوقاف", "ثقافة", "صحة"];
+const CATS = ["الكل", "تربية", "أوقاف", "المجلس الوطني", "الصحة"];
 
 const iconMap: Record<string, string> = {
   "تربية": "fas fa-graduation-cap",
   "أوقاف": "fas fa-mosque",
-  "ثقافة": "fas fa-theater-masks",
-  "صحة": "fas fa-hospital",
+  "المجلس الوطني": "fas fa-theater-masks",
+  "الصحة": "fas fa-hospital",
 };
 
 const colorMap: Record<string, { bg: string; fg: string; badge: string }> = {
   "تربية": { bg: "rgba(0,212,255,.1)", fg: "var(--c1)", badge: "rgba(0,212,255,.08)" },
   "أوقاف": { bg: "rgba(168,85,247,.1)", fg: "var(--c2)", badge: "rgba(168,85,247,.08)" },
-  "ثقافة": { bg: "rgba(245,158,11,.1)", fg: "var(--c4)", badge: "rgba(245,158,11,.08)" },
-  "صحة": { bg: "rgba(34,197,94,.1)", fg: "var(--c3)", badge: "rgba(34,197,94,.08)" },
+  "المجلس الوطني": { bg: "rgba(245,158,11,.1)", fg: "var(--c4)", badge: "rgba(245,158,11,.08)" },
+  "الصحة": { bg: "rgba(34,197,94,.1)", fg: "var(--c3)", badge: "rgba(34,197,94,.08)" },
 };
 
 export default function ProjectsPage() {
@@ -77,9 +76,11 @@ export default function ProjectsPage() {
 
   const filtered = filter === "الكل" ? projects : projects.filter((p) => p.cat === filter);
 
-  // Helper function to get category count
-  const getCatCount = (cat: string) => {
+  // Helper function to get category for filtering
+  const getCategoryCount = (cat: string) => {
     if (cat === "الكل") return totalProjects;
+    if (cat === "المجلس الوطني") return projects.filter((p) => p.cat === "المجلس الوطني").length;
+    if (cat === "الصحة") return projects.filter((p) => p.cat === "الصحة").length;
     return projects.filter((p) => p.cat === cat).length;
   };
 
@@ -96,7 +97,7 @@ export default function ProjectsPage() {
         <div className="proj-filter">
           {CATS.map((c) => (
             <button key={c} className={`proj-fbtn${filter === c ? " active" : ""}`} onClick={() => setFilter(c)}>
-              {c === "الكل" ? `الكل (${totalProjects})` : `${c} (${getCatCount(c)})`}
+              {c === "الكل" ? `الكل (${totalProjects})` : `${c} (${getCategoryCount(c)})`}
             </button>
           ))}
         </div>
@@ -116,8 +117,8 @@ export default function ProjectsPage() {
                 <h3>{p.system}</h3>
                 <p>{p.company} — {p.area}</p>
                 <div className="proj-techs">
-                  <span className="proj-tech">{p.year !== "—" ? p.year : "جاري"}</span>
-                  <span className="proj-tech">{p.cat}</span>
+                  <span className="proj-tech">{p.year}</span>
+                  <span className="proj-tech">{p.cat === "المجلس الوطني" ? "ثقافة" : p.cat === "الصحة" ? "صحة" : p.cat}</span>
                   <span className="proj-tech">محمي</span>
                 </div>
                 <div className="proj-prot">
