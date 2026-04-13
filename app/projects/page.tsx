@@ -31,12 +31,14 @@ const projects: Proj[] = [
   { year: "2025", company: "شركة دماروز", area: "حولي (صيانة جذرية)", ministry: "وزارة الأوقاف", system: "قاعدة بيانات إصدار التكاليف", cat: "أوقاف" },
   { year: "2025", company: "شركة المدلول", area: "الفروانية (صيانة جذرية)", ministry: "وزارة الأوقاف", system: "قاعدة بيانات إصدار التكاليف", cat: "أوقاف" },
   { year: "2025", company: "شركة تطوير الشرق الأوسط", area: "صيانة المساكن الوقفية", ministry: "وزارة الأوقاف", system: "قاعدة بيانات إصدار التكاليف", cat: "أوقاف" },
+  // وزارة الأوقاف - مشروع جديد
+  { year: "2025", company: "شركة براديس", area: "الفروانية — صيانة ثلاث مساجد", ministry: "وزارة الأوقاف", system: "قاعدة بيانات إصدار التكاليف", cat: "أوقاف" },
   // المجلس الوطني
   { year: "2025", company: "—", area: "جميع المناطق", ministry: "المجلس الوطني للثقافة والفنون والآداب", system: "قاعدة بيانات شاملة لإصدار أوامر العمل", cat: "المجلس الوطني" },
   // وزارة الصحة
   { year: "—", company: "شركة المنذر العقارية", area: "المستشفيات (تمديد العقد)", ministry: "وزارة الصحة", system: "قاعدة بيانات أعمال الصيانة", cat: "الصحة" },
-  // الهيئة العامة لشئون الإعاقة
-  { year: "2025", company: "شركة دابوق", area: "جميع المناطق", ministry: "الهيئة العامة لشئون الإعاقة", system: "قاعدة بيانات إصدار أوامر العمل وحساب الكميات", cat: "الهيئة العامة لشئون الإعاقة" },
+  // الهيئة العامة لشئون ذوي الاعاقة
+  { year: "2025", company: "شركة دابوق", area: "جميع المناطق", ministry: "الهيئة العامة لشئون ذوي الاعاقة", system: "قاعدة بيانات إصدار أوامر العمل وحساب الكميات", cat: "الهيئة العامة لشئون ذوي الاعاقة" },
   // خاص
   { year: "2025", company: "شركة ADVACC", area: "قطاعات متعددة", ministry: "القطاع الخاص", system: "20 قاعدة بيانات مختلفة", cat: "خاص" },
 ];
@@ -50,14 +52,14 @@ const uniqueMinistries = new Set(projects.map(p => p.ministry)).size;
 // حساب عدد المناطق الفريدة
 const uniqueAreas = new Set(projects.map(p => p.area)).size;
 
-const CATS = ["الكل", "تربية", "أوقاف", "المجلس الوطني", "الصحة", "الهيئة العامة لشئون الإعاقة", "خاص"];
+const CATS = ["الكل", "تربية", "أوقاف", "المجلس الوطني", "الصحة", "الهيئة العامة لشئون ذوي الاعاقة", "خاص"];
 
 const iconMap: Record<string, string> = {
   "تربية": "fas fa-graduation-cap",
   "أوقاف": "fas fa-mosque",
   "المجلس الوطني": "fas fa-theater-masks",
   "الصحة": "fas fa-hospital",
-  "الهيئة العامة لشئون الإعاقة": "fas fa-wheelchair",
+  "الهيئة العامة لشئون ذوي الاعاقة": "fas fa-wheelchair",
   "خاص": "fas fa-building",
 };
 
@@ -66,7 +68,7 @@ const colorMap: Record<string, { bg: string; fg: string; badge: string }> = {
   "أوقاف": { bg: "rgba(168,85,247,.1)", fg: "var(--c2)", badge: "rgba(168,85,247,.08)" },
   "المجلس الوطني": { bg: "rgba(245,158,11,.1)", fg: "var(--c4)", badge: "rgba(245,158,11,.08)" },
   "الصحة": { bg: "rgba(34,197,94,.1)", fg: "var(--c3)", badge: "rgba(34,197,94,.08)" },
-  "الهيئة العامة لشئون الإعاقة": { bg: "rgba(236,72,153,.1)", fg: "#ec4899", badge: "rgba(236,72,153,.08)" },
+  "الهيئة العامة لشئون ذوي الاعاقة": { bg: "rgba(236,72,153,.1)", fg: "#ec4899", badge: "rgba(236,72,153,.08)" },
   "خاص": { bg: "rgba(139,92,246,.1)", fg: "#8b5cf6", badge: "rgba(139,92,246,.08)" },
 };
 
@@ -94,8 +96,16 @@ export default function ProjectsPage() {
   const getDisplayCatName = (cat: string) => {
     if (cat === "المجلس الوطني") return "ثقافة";
     if (cat === "الصحة") return "صحة";
-    if (cat === "الهيئة العامة لشئون الإعاقة") return "إعاقة";
+    if (cat === "الهيئة العامة لشئون ذوي الاعاقة") return "إعاقة";
     if (cat === "خاص") return "خاص";
+    return cat;
+  };
+
+  // Helper function to get short display name for filter button
+  const getFilterDisplayName = (cat: string) => {
+    if (cat === "الهيئة العامة لشئون ذوي الاعاقة") return "الهيئة العامة للإعاقة";
+    if (cat === "المجلس الوطني") return "المجلس الوطني";
+    if (cat === "الصحة") return "الصحة";
     return cat;
   };
 
@@ -112,7 +122,7 @@ export default function ProjectsPage() {
         <div className="proj-filter">
           {CATS.map((c) => (
             <button key={c} className={`proj-fbtn${filter === c ? " active" : ""}`} onClick={() => setFilter(c)}>
-              {c === "الكل" ? `الكل (${totalProjects})` : `${c === "الهيئة العامة لشئون الإعاقة" ? "الهيئة العامة للإعاقة" : c} (${getCategoryCount(c)})`}
+              {c === "الكل" ? `الكل (${totalProjects})` : `${getFilterDisplayName(c)} (${getCategoryCount(c)})`}
             </button>
           ))}
         </div>
