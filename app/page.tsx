@@ -55,7 +55,7 @@ export default function Home() {
 
           <div className="hero-stats">
             <div className="h-stat"><Counter target={14} suffix="+" /><span className="l">سنوات خبرة</span></div>
-            <div className="h-stat"><Counter target={25} suffix="+" /><span className="l">مشروع منجز</span></div>
+            <div className="h-stat"><Counter target={30} suffix="+" /><span className="l">مشروع منجز</span></div>
             <div className="h-stat"><Counter target={5} /><span className="l">فئات مهارات</span></div>
           </div>
 
