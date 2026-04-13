@@ -77,7 +77,7 @@ export default function Home() {
             <div className="pc-ring" />
             <div className="pc-img">
               <Image 
-                src="/profile.jpg" 
+                src="/profile.jpeg" 
                 alt="Taha Nageeb"
                 width={250}
                 height={250}
