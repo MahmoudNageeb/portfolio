@@ -10,7 +10,7 @@ const NAV = [
   { href: "/skills", label: "المهارات", icon: "fas fa-cogs" },
   { href: "/projects", label: "المشاريع", icon: "fas fa-layer-group" },
   { href: "/goals", label: "الأهداف", icon: "fas fa-bullseye" },
-  { href: "/contact", label: "تواصل", icon: "fas fa-paper-plane" },
+  { href: "/contact", label: "الدعم المباشر", icon: "fas fa-paper-plane" },
 ];
 
 function Navbar() {
