@@ -13,78 +13,41 @@ const NAV = [
   { href: "/contact", label: "الدعم المباشر", icon: "fas fa-paper-plane" },
 ];
 
-// Accurate Hijri date calculation using Umm al-Qura calendar approximation
-function getHijriDate() {
-  const date = new Date();
+// Function to get Makkah time (UTC+3)
+function getMakkahTime() {
+  const now = new Date();
+  // Makkah is UTC+3 (Arabia Standard Time)
+  const makkahTime = new Date(now.getTime() + (3 * 60 * 60 * 1000));
   
-  // Hijri months names
-  const hijriMonths = [
-    "محرم", "صفر", "ربيع الأول", "ربيع الثاني", 
-    "جمادى الأولى", "جمادى الثانية", "رجب", "شعبان", 
-    "رمضان", "شوال", "ذو القعدة", "ذو الحجة"
-  ];
+  const hours = makkahTime.getUTCHours();
+  const minutes = makkahTime.getUTCMinutes();
+  const seconds = makkahTime.getUTCSeconds();
   
-  // Known reference: 1 Muharram 1446 AH = July 7, 2024 (approximate)
-  // Using a more accurate calculation based on known astronomical data
-  const gregorianDate = new Date(date);
-  const year = gregorianDate.getFullYear();
-  const month = gregorianDate.getMonth();
-  const day = gregorianDate.getDate();
+  // Format hours in 12-hour format with AM/PM
+  const period = hours >= 12 ? "مساءً" : "صباحاً";
+  let displayHours = hours % 12;
+  displayHours = displayHours === 0 ? 12 : displayHours;
   
-  // Calculate Julian Day Number
-  const a = Math.floor((14 - month) / 12);
-  const y = year + 4800 - a;
-  const m = month + 12 * a - 3;
-  let jd = day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
-  
-  // Convert Julian Day to Hijri
-  const hijriEpoch = 1948439.5; // Julian Day of 1 Muharram 1 AH (July 16, 622 CE)
-  const daysSinceEpoch = jd - hijriEpoch;
-  
-  // Hijri year calculation (354.367 days per year)
-  let hijriYear = Math.floor(daysSinceEpoch / 354.367);
-  let remainingDays = daysSinceEpoch - (hijriYear * 354.367);
-  
-  // Adjust for month lengths (alternating 29 and 30 days)
-  let hijriMonth = 0;
-  let monthDays = 0;
-  
-  for (let i = 0; i < 12; i++) {
-    monthDays = (i % 2 === 0) ? 30 : 29;
-    if (remainingDays <= monthDays) {
-      hijriMonth = i;
-      break;
-    }
-    remainingDays -= monthDays;
-  }
-  
-  // Special adjustment for Dhul Hijjah (12th month) - sometimes 30 days
-  if (hijriMonth === 11 && remainingDays > 29) {
-    remainingDays = 30;
-  }
-  
-  // Fix for when the loop doesn't break (shouldn't happen normally)
-  if (hijriMonth === 0 && remainingDays > 30) {
-    hijriMonth = 11;
-    remainingDays = 30;
-  }
-  
-  const hijriDay = Math.floor(remainingDays);
+  const formattedHours = displayHours.toString().padStart(2, '0');
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+  const formattedSeconds = seconds.toString().padStart(2, '0');
   
   return {
-    day: hijriDay,
-    month: hijriMonths[hijriMonth],
-    year: hijriYear + 1,
+    time: `${formattedHours}:${formattedMinutes}:${formattedSeconds}`,
+    period: period,
+    fullTime: `${formattedHours}:${formattedMinutes}:${formattedSeconds} ${period}`
   };
 }
 
 function formatGregorianDate() {
   const date = new Date();
   const gregorianMonths = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+  const weekDays = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
   const day = date.getDate();
   const month = gregorianMonths[date.getMonth()];
   const year = date.getFullYear();
-  return `${day} ${month} ${year} م`;
+  const weekDay = weekDays[date.getDay()];
+  return `${weekDay} ${day} ${month} ${year} م`;
 }
 
 function Navbar() {
@@ -93,7 +56,7 @@ function Navbar() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [gregorianDate, setGregorianDate] = useState("");
-  const [hijriDate, setHijriDate] = useState("");
+  const [makkahTime, setMakkahTime] = useState("");
 
   useEffect(() => {
     const s = localStorage.getItem("theme") as "dark" | "light" | null;
@@ -119,26 +82,20 @@ function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Update dates on component mount and every day
+  // Update dates and time on component mount and every second
   useEffect(() => {
-    const updateDates = () => {
+    const updateDateTime = () => {
       setGregorianDate(formatGregorianDate());
-      const hijri = getHijriDate();
-      setHijriDate(`${hijri.day} ${hijri.month} ${hijri.year} هـ`);
+      const makkah = getMakkahTime();
+      setMakkahTime(makkah.fullTime);
     };
     
-    updateDates();
+    updateDateTime();
     
-    // Update at midnight
-    const now = new Date();
-    const msUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
-    const timeoutId = setTimeout(() => {
-      updateDates();
-      // Then update every 24 hours
-      setInterval(updateDates, 86400000);
-    }, msUntilMidnight);
+    // Update time every second
+    const intervalId = setInterval(updateDateTime, 1000);
     
-    return () => clearTimeout(timeoutId);
+    return () => clearInterval(intervalId);
   }, []);
 
   const toggle = useCallback(() => {
@@ -155,10 +112,15 @@ function Navbar() {
       <div className="topbar">
         <span>بسم الله الرحمن الرحيم</span>
         <span className="topbar-dates">
-          <i className="fas fa-calendar-alt" style={{ marginLeft: "8px" }} />
+          <i className="fas fa-clock" style={{ marginLeft: "8px" }} />
           {gregorianDate && <span>{gregorianDate}</span>}
-          {gregorianDate && hijriDate && <span style={{ margin: "0 8px" }}>|</span>}
-          {hijriDate && <span>{hijriDate}</span>}
+          {gregorianDate && makkahTime && <span style={{ margin: "0 8px" }}>|</span>}
+          {makkahTime && (
+            <span>
+              <i className="fas fa-mosque" style={{ marginLeft: "6px", fontSize: "0.85rem" }} />
+              توقيت مكة: {makkahTime}
+            </span>
+          )}
         </span>
       </div>
 
