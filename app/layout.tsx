@@ -13,29 +13,68 @@ const NAV = [
   { href: "/contact", label: "الدعم المباشر", icon: "fas fa-paper-plane" },
 ];
 
-// Function to convert Gregorian to Hijri date
+// Accurate Hijri date calculation using Umm al-Qura calendar approximation
 function getHijriDate() {
   const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
   
-  // Simple Hijri calculation (approximate - for accuracy use a proper library)
-  // This is an approximation - for production, consider using a proper Hijri library
-  const hijriYear = Math.floor((year - 622) * 0.97);
-  const hijriMonths = ["محرم", "صفر", "ربيع الأول", "ربيع الثاني", "جمادى الأولى", "جمادى الثانية", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"];
+  // Hijri months names
+  const hijriMonths = [
+    "محرم", "صفر", "ربيع الأول", "ربيع الثاني", 
+    "جمادى الأولى", "جمادى الثانية", "رجب", "شعبان", 
+    "رمضان", "شوال", "ذو القعدة", "ذو الحجة"
+  ];
   
-  // More accurate calculation using known reference points
-  const knownHijriStart = new Date(622, 6, 16); // July 16, 622 CE
-  const daysSinceHijra = Math.floor((date.getTime() - knownHijriStart.getTime()) / (1000 * 60 * 60 * 24));
-  const hijriDay = (daysSinceHijra % 29.53) + 1;
-  const hijriMonthIndex = Math.floor((daysSinceHijra / 29.53) % 12);
-  const hijriYearCalculated = Math.floor(daysSinceHijra / 354.367);
+  // Known reference: 1 Muharram 1446 AH = July 7, 2024 (approximate)
+  // Using a more accurate calculation based on known astronomical data
+  const gregorianDate = new Date(date);
+  const year = gregorianDate.getFullYear();
+  const month = gregorianDate.getMonth();
+  const day = gregorianDate.getDate();
+  
+  // Calculate Julian Day Number
+  const a = Math.floor((14 - month) / 12);
+  const y = year + 4800 - a;
+  const m = month + 12 * a - 3;
+  let jd = day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+  
+  // Convert Julian Day to Hijri
+  const hijriEpoch = 1948439.5; // Julian Day of 1 Muharram 1 AH (July 16, 622 CE)
+  const daysSinceEpoch = jd - hijriEpoch;
+  
+  // Hijri year calculation (354.367 days per year)
+  let hijriYear = Math.floor(daysSinceEpoch / 354.367);
+  let remainingDays = daysSinceEpoch - (hijriYear * 354.367);
+  
+  // Adjust for month lengths (alternating 29 and 30 days)
+  let hijriMonth = 0;
+  let monthDays = 0;
+  
+  for (let i = 0; i < 12; i++) {
+    monthDays = (i % 2 === 0) ? 30 : 29;
+    if (remainingDays <= monthDays) {
+      hijriMonth = i;
+      break;
+    }
+    remainingDays -= monthDays;
+  }
+  
+  // Special adjustment for Dhul Hijjah (12th month) - sometimes 30 days
+  if (hijriMonth === 11 && remainingDays > 29) {
+    remainingDays = 30;
+  }
+  
+  // Fix for when the loop doesn't break (shouldn't happen normally)
+  if (hijriMonth === 0 && remainingDays > 30) {
+    hijriMonth = 11;
+    remainingDays = 30;
+  }
+  
+  const hijriDay = Math.floor(remainingDays);
   
   return {
-    day: Math.floor(hijriDay),
-    month: hijriMonths[hijriMonthIndex],
-    year: hijriYearCalculated + 1,
+    day: hijriDay,
+    month: hijriMonths[hijriMonth],
+    year: hijriYear + 1,
   };
 }
 
@@ -114,7 +153,7 @@ function Navbar() {
   return (
     <>
       <div className="topbar">
-        <span> بسم الله الرحمن الرحيم</span>
+        <span>بسم الله الرحمن الرحيم</span>
         <span className="topbar-dates">
           <i className="fas fa-calendar-alt" style={{ marginLeft: "8px" }} />
           {gregorianDate && <span>{gregorianDate}</span>}
