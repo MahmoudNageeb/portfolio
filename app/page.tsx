@@ -79,11 +79,11 @@ export default function Home() {
               <Image 
                 src="/profile.jpeg" 
                 alt="Taha Nageeb"
-                width={250}
-                height={250}
+                width={500}
+                height={500}
                 className="profile-image"
                 priority
-                quality={80}
+                quality={90}
               />
             </div>
             <span className="pc-label">ADVACC</span>
