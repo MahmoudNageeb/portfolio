@@ -13,7 +13,7 @@ const NAV = [
   { href: "/contact", label: "الدعم المباشر", icon: "fas fa-paper-plane" },
 ];
 
-// Function to get Makkah time (UTC+3)
+// Function to get Makkah time (UTC+3) without seconds
 function getMakkahTime() {
   const now = new Date();
   // Makkah is UTC+3 (Arabia Standard Time)
@@ -21,7 +21,6 @@ function getMakkahTime() {
   
   const hours = makkahTime.getUTCHours();
   const minutes = makkahTime.getUTCMinutes();
-  const seconds = makkahTime.getUTCSeconds();
   
   // Format hours in 12-hour format with AM/PM
   const period = hours >= 12 ? "مساءً" : "صباحاً";
@@ -30,12 +29,11 @@ function getMakkahTime() {
   
   const formattedHours = displayHours.toString().padStart(2, '0');
   const formattedMinutes = minutes.toString().padStart(2, '0');
-  const formattedSeconds = seconds.toString().padStart(2, '0');
   
   return {
-    time: `${formattedHours}:${formattedMinutes}:${formattedSeconds}`,
+    time: `${formattedHours}:${formattedMinutes}`,
     period: period,
-    fullTime: `${formattedHours}:${formattedMinutes}:${formattedSeconds} ${period}`
+    fullTime: `${formattedHours}:${formattedMinutes} ${period}`
   };
 }
 
@@ -82,7 +80,7 @@ function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Update dates and time on component mount and every second
+  // Update dates and time on component mount and every minute
   useEffect(() => {
     const updateDateTime = () => {
       setGregorianDate(formatGregorianDate());
@@ -92,8 +90,8 @@ function Navbar() {
     
     updateDateTime();
     
-    // Update time every second
-    const intervalId = setInterval(updateDateTime, 1000);
+    // Update time every minute (60,000 ms) instead of every second
+    const intervalId = setInterval(updateDateTime, 60000);
     
     return () => clearInterval(intervalId);
   }, []);
