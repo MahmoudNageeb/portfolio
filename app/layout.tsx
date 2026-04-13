@@ -114,7 +114,7 @@ function Navbar() {
   return (
     <>
       <div className="topbar">
-        <span>بسم الله الرحمن الرحيم</span>
+        <span> بسم الله الرحمن الرحيم</span>
         <span className="topbar-dates">
           <i className="fas fa-calendar-alt" style={{ marginLeft: "8px" }} />
           {gregorianDate && <span>{gregorianDate}</span>}
