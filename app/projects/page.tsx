@@ -46,13 +46,14 @@ const uniqueMinistries = new Set(projects.map(p => p.ministry)).size;
 // حساب عدد المناطق الفريدة
 const uniqueAreas = new Set(projects.map(p => p.area)).size;
 
-const CATS = ["الكل", "تربية", "أوقاف", "المجلس الوطني", "الصحة"];
+// Fix: Match the categories with what's in the data
+const CATS = ["الكل", "تربية", "أوقاف", "ثقافة", "صحة"];
 
 const iconMap: Record<string, string> = {
   "تربية": "fas fa-graduation-cap",
   "أوقاف": "fas fa-mosque",
-  "المجلس الوطني": "fas fa-theater-masks",
-  "الصحة": "fas fa-hospital",
+  "ثقافة": "fas fa-theater-masks",
+  "صحة": "fas fa-hospital",
 };
 
 const colorMap: Record<string, { bg: string; fg: string; badge: string }> = {
@@ -76,6 +77,12 @@ export default function ProjectsPage() {
 
   const filtered = filter === "الكل" ? projects : projects.filter((p) => p.cat === filter);
 
+  // Helper function to get category count
+  const getCatCount = (cat: string) => {
+    if (cat === "الكل") return totalProjects;
+    return projects.filter((p) => p.cat === cat).length;
+  };
+
   return (
     <div style={{ paddingTop: "calc(var(--top-h) + var(--nav-h))" }}>
       <div className="sec">
@@ -89,7 +96,7 @@ export default function ProjectsPage() {
         <div className="proj-filter">
           {CATS.map((c) => (
             <button key={c} className={`proj-fbtn${filter === c ? " active" : ""}`} onClick={() => setFilter(c)}>
-              {c === "الكل" ? `الكل (${totalProjects})` : `${c} (${projects.filter((p) => p.cat === c).length})`}
+              {c === "الكل" ? `الكل (${totalProjects})` : `${c} (${getCatCount(c)})`}
             </button>
           ))}
         </div>
@@ -109,7 +116,7 @@ export default function ProjectsPage() {
                 <h3>{p.system}</h3>
                 <p>{p.company} — {p.area}</p>
                 <div className="proj-techs">
-                  <span className="proj-tech">{p.year}</span>
+                  <span className="proj-tech">{p.year !== "—" ? p.year : "جاري"}</span>
                   <span className="proj-tech">{p.cat}</span>
                   <span className="proj-tech">محمي</span>
                 </div>
